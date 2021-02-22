@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import web.dao.UserDao;
 import web.dao.UserDaoImpl;
 import web.model.User;
 
@@ -14,7 +15,8 @@ import javax.validation.Valid;
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserDaoImpl userDao;
+    @Autowired
+    private final UserDao userDao;
 
     @Autowired
     public UserController(UserDaoImpl userDao) {
@@ -29,7 +31,6 @@ public class UserController {
 
     @GetMapping("/{id}")
     public String show (@PathVariable("id") int id, Model model) {
-        // get one user by his id from dao
         model.addAttribute("user", userDao.show(id));
         return "users/show";
     }
