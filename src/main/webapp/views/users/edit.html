@@ -15,6 +15,10 @@
     <input type="text" th:field="*{lastName}" id="lastName"/>
     <div style="color:red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Last name error</div>
     <br/>
+    <label for="name">Enter new password:</label>
+    <input type="text" th:field="*{password}" id="password"/>
+    <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</div>
+    <br/>
     <input type="submit" value="Update user info"/>
 </form>
 

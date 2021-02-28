@@ -2,11 +2,15 @@ package web.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import web.config.AppConfig;
+import web.model.Role;
 import web.model.User;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Set;
+
 
 @Component
 public class UserDaoImpl implements UserDao {
@@ -52,5 +56,16 @@ public class UserDaoImpl implements UserDao {
     public User show(int id) {
         EntityManager em = ac.entityManagerFactory().getObject().createEntityManager();
         return em.find(User.class, id);
+    }
+
+    public User getUserByName (String username) {
+        EntityManager em = ac.entityManagerFactory().getObject().createEntityManager();
+        em.getTransaction().begin();
+        User user = em.createQuery(
+                "SELECT u from User u WHERE u.name = :username", User.class).
+                setParameter("username", username).getSingleResult();
+        em.getTransaction().commit();
+        em.close();
+        return user;
     }
 }
