@@ -1,7 +1,6 @@
 package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -13,7 +12,6 @@ import web.dao.UserDaoImpl;
 import web.model.User;
 
 import javax.validation.Valid;
-import java.security.Principal;
 
 @Controller
 @RequestMapping("/users")
@@ -45,7 +43,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public String show (@PathVariable("id") int id, Model model) {
+    public String show(@PathVariable("id") int id, Model model) {
         model.addAttribute("user", userDao.show(id));
         return "users/show";
     }
@@ -87,17 +85,11 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public String viewUserInfo (Model model) {
+    public String viewUserInfo(Model model) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        if (principal instanceof UserDetails) {
-            String username = ((UserDetails)principal).getUsername();
-            User user = userDao.getUserByName(username);
-            model.addAttribute("user", user);
-//        } else {
-//            String username = principal.toString();
-//            User user = userDao.getUserByName(username);
-//            model.addAttribute("user", user);
-//        }
+        String username = ((UserDetails) principal).getUsername();
+        User user = userDao.getUserByName(username);
+        model.addAttribute("user", user);
         return "users/user";
     }
 }

@@ -2,12 +2,12 @@ package web.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 import web.config.AppConfig;
 import web.model.Role;
 import web.model.User;
 
 import javax.persistence.EntityManager;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -22,6 +22,10 @@ public class UserDaoImpl implements UserDao {
     public void saveUser(User user) {
         EntityManager em = ac.entityManagerFactory().getObject().createEntityManager();
         em.getTransaction().begin();
+        user.setPassword("default");
+        Set<Role> set = new HashSet<>();
+        set.add(em.find(Role.class, 2));
+        user.setRoles(set);
         em.persist(user);
         em.getTransaction().commit();
         em.close();
