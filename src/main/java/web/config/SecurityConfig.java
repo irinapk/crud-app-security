@@ -34,12 +34,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.authorizeRequests()
-                .antMatchers("/").permitAll() // доступность всем
-                .antMatchers("/users/admin").access("hasAnyRole('ROLE_ADMIN')")
+                .antMatchers("/users/show").permitAll() // доступность всем
+                .antMatchers("/users/admin").access("hasRole('ROLE_ADMIN') and not( hasRole('USER'))")
+                .anyRequest().fullyAuthenticated()
                 .and().formLogin()  // Spring сам подставит свою логин форму
                 .successHandler(successUserHandler); // подключаем наш SuccessHandler для перенеправления по ролям
 
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {

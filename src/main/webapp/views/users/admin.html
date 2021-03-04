@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -7,16 +8,19 @@
 </head>
 <body>
 <div>
-    <h3>Administrator's Page</h3>
+    <h2>Administrator's Page</h2>
 </div>
+<h4>List of all users in the database</h4>
+<br>
 <div th:each="user : ${users}">
-    <a th:href="@{users/{id}(id=${user.getId()})}"
+    <a th:href="@{user/{id}(id=${user.getId()})}"
        th:text="${user.getName() + ' ' + user.getLastName()}">user</a>
 </div>
 
-<br/>
-<hr/>
-    <a href="/users/new">Create new user</a>
+<br>
+<hr>
+    <a href="/user/new">Create new user</a>
+<br>
 <br>
 <form th:action="@{/logout}" method="post">
     <input type="submit" value="Logout"/>

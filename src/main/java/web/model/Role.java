@@ -62,4 +62,34 @@ public class Role implements GrantedAuthority {
     public void setUsers(Set<User> users) {
         this.users = users;
     }
+
+    @Override
+    public String toString() {
+        return this.role;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (((Integer)id == null) ? 0 : ((Integer)id).hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Role other = (Role) obj;
+        if ((Integer)id == null) {
+            if ((Integer)other.id != null)
+                return false;
+        } else if (!((Integer)id).equals((Integer)other.id))
+            return false;
+        return true;
+    }
 }

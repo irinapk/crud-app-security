@@ -7,33 +7,31 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import web.dao.RoleDao;
 import web.dao.UserDao;
-import web.dao.UserDaoImpl;
+import web.model.Role;
 import web.model.User;
 
 import javax.validation.Valid;
+import java.util.HashSet;
+import java.util.Set;
 
 @Controller
-@RequestMapping("/users")
+@RequestMapping("")
 public class UserController {
 
-    @Autowired
     private final UserDao userDao;
+    private final RoleDao roleDao;
 
     @Autowired
-    public UserController(UserDaoImpl userDao) {
+    public UserController(UserDao userDao, RoleDao roleDao) {
         this.userDao = userDao;
+        this.roleDao = roleDao;
     }
 
     @GetMapping(value = "/login")
     public String getLoginPage() {
         return "login";
-    }
-
-    @GetMapping()
-    public String index(Model model) {
-        model.addAttribute("users", userDao.getAllUsers());
-        return "users/index";
     }
 
     @GetMapping("/admin")
@@ -42,46 +40,66 @@ public class UserController {
         return "users/admin";
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("user/{id}")
     public String show(@PathVariable("id") int id, Model model) {
         model.addAttribute("user", userDao.show(id));
         return "users/show";
     }
 
-    @GetMapping("/new")
+    @GetMapping("user/new")
     public String newUser(Model model) {
         model.addAttribute("user", new User());
+        Set<Role> roles = roleDao.showAllRoles();
+        model.addAttribute("allRoles", roles);
         return "users/new";
     }
 
-    @PostMapping()
-    public String create(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+    @PostMapping("user/new")
+    public String create(@ModelAttribute("user") @Valid User user,
+                         @RequestParam(value="roleID") int[] roleID,
+                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "users/new";
         }
+        Set<Role> roleSet = new HashSet<>();
+        for (int i = 0; i < roleID.length; i++) {
+           roleSet.add(roleDao.findRoleById(roleID[i]));
+        }
+        user.setRoles(roleSet);
         userDao.saveUser(user);
-        return "redirect:/users";
+        return "redirect:/admin";
     }
 
-    @GetMapping("/{id}/edit")
+    // EDITING EXISTING USERS
+    @GetMapping("user/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
         model.addAttribute("user", userDao.show(id));
+        Set<Role> roles = roleDao.showAllRoles();
+        model.addAttribute("allRoles", roles);
         return "users/edit";
     }
 
-    @PatchMapping("/{id}")
-    public String update(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, @PathVariable("id") int id) {
+    @PatchMapping("user/{id}")
+    public String update(@ModelAttribute("user") @Valid User user,
+                         @RequestParam(value="roleID") int[] roleID,
+                         BindingResult bindingResult,
+                         @PathVariable("id") int id) {
         if (bindingResult.hasErrors()) {
             return "users/edit";
         }
-        userDao.update(id, user);
-        return "redirect:/users";
+        Set<Role> roleSet = new HashSet<>();
+        for (int i = 0; i < roleID.length; i++) {
+            roleSet.add(roleDao.findRoleById(roleID[i]));
+        }
+        user.setRoles(roleSet);
+        userDao.update(user);
+        return "redirect:/admin";
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("user/{id}")
     public String delete(@PathVariable("id") int id) {
         userDao.removeUserById(id);
-        return "redirect:/users";
+        return "redirect:/admin";
     }
 
     @GetMapping("/user")

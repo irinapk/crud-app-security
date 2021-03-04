@@ -998,13 +998,15 @@ SELECT|sys.sys_config
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="307" parent="295" name="FKdnm9dti9cemimqeorwiss6gjk">
-      <ColNames>user_id</ColNames>
-      <Type>btree</Type>
-    </index>
-    <index id="308" parent="295" name="FKo0h23csbdmkkfsyuymepcmr0e">
+    <index id="307" parent="295" name="FKo0h23csbdmkkfsyuymepcmr0e">
       <ColNames>role_id</ColNames>
       <Type>btree</Type>
     </index>
+    <key id="308" parent="295" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>user_id
+role_id</ColNames>
+      <Primary>1</Primary>
+    </key>
   </database-model>
 </dataSource>
