@@ -82,7 +82,6 @@ public class User implements UserDetails {
         return "User "+ getId() + ": " + getName() + " " + getLastName();
     }
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;

@@ -34,18 +34,21 @@ public class UserController {
         return "login";
     }
 
+    //ADMIN PAGE
     @GetMapping("/admin")
     public String viewAdminPage(Model model) {
         model.addAttribute("users", userDao.getAllUsers());
         return "users/admin";
     }
 
+    //ADMIN USER VIEW PAGE
     @GetMapping("user/{id}")
     public String show(@PathVariable("id") int id, Model model) {
         model.addAttribute("user", userDao.show(id));
         return "users/show";
     }
 
+    //CREATING A NEW USER
     @GetMapping("user/new")
     public String newUser(Model model) {
         model.addAttribute("user", new User());
@@ -70,7 +73,7 @@ public class UserController {
         return "redirect:/admin";
     }
 
-    // EDITING EXISTING USERS
+    // EDITING THE USER
     @GetMapping("user/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
         model.addAttribute("user", userDao.show(id));
@@ -96,12 +99,14 @@ public class UserController {
         return "redirect:/admin";
     }
 
+    //DELETING THE USER
     @DeleteMapping("user/{id}")
     public String delete(@PathVariable("id") int id) {
         userDao.removeUserById(id);
         return "redirect:/admin";
     }
 
+    //USER PAGE VIEW FOR NON-ADMINS
     @GetMapping("/user")
     public String viewUserInfo(Model model) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

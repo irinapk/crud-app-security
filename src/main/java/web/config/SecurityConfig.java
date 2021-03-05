@@ -17,8 +17,8 @@ import web.config.handler.LoginSuccessHandler;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsService userDetailsService; // сервис, с помощью которого тащим пользователя
-    private final LoginSuccessHandler successUserHandler; // класс, в котором описана логика перенаправления пользователей по ролям
+    private final UserDetailsService userDetailsService;
+    private final LoginSuccessHandler successUserHandler;
 
     public SecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService, LoginSuccessHandler successUserHandler) {
         this.userDetailsService = userDetailsService;
@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder()); // конфигурация для прохождения аутентификации
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Override
@@ -37,8 +37,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/users/show").permitAll() // доступность всем
                 .antMatchers("/users/admin").access("hasRole('ROLE_ADMIN') and not( hasRole('USER'))")
                 .anyRequest().fullyAuthenticated()
-                .and().formLogin()  // Spring сам подставит свою логин форму
-                .successHandler(successUserHandler); // подключаем наш SuccessHandler для перенеправления по ролям
+                .and().formLogin()
+                .successHandler(successUserHandler);
 
     }
 
